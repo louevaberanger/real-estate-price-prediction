@@ -129,7 +129,7 @@ Cela montre quelles variables influencent le plus le prix (ex. Surface reelle ba
 
 🌐 Interface utilisateur (optionnelle)
 
- Sur le terminal, lancer streamlit run src/app.py après avoir installé streamlit
+ Sur le terminal, lancer streamlit run app/streamlit_app.py après avoir installé streamlit
 
 Streamlit : interface web pour saisir les caractéristiques et afficher le prix estimé.
 
