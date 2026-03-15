@@ -20,18 +20,18 @@ def clean_data(df):
     # remplir les NaN
     df["Nombre pieces principales"].fillna(df["Nombre pieces principales"].median(), inplace=True)
     df["Surface terrain"].fillna(0, inplace=True)
-    df["Code postal"] = df["Code postal"].fillna(0)
 
     # Date mutation → année / mois
     df["Date mutation"] = pd.to_datetime(df["Date mutation"], errors="coerce")
     df["annee_mutation"] = df["Date mutation"].dt.year
     df["mois_mutation"] = df["Date mutation"].dt.month
-
-    # extraire département depuis Code postal
-    df["Code departement"] = df["Code postal"].astype(str).str[:2]
+    df["Code postal"] = df["Code postal"].astype(str).str.replace(r"\.0$", "", regex=True)
+    df["Code departement"] = df["Code postal"].str.zfill(5).str[:2]
+    df["Code postal"] = df["Code postal"].astype(str).str.replace(r"\.0$", "", regex=True)
+    df["Code departement"] = df["Code postal"].str.zfill(5).str[:2]
 
     # encodage des colonnes catégorielles
-    df = pd.get_dummies(df, columns=["Type local", "Code departement"], drop_first=True)
+    df = pd.get_dummies(df, columns=["Type local", "Code departement"], drop_first=False)
 
     # garder seulement les colonnes utiles pour ML
     keep_cols = ["Valeur fonciere", "Surface reelle bati", "Nombre pieces principales",
