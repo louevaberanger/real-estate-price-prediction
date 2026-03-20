@@ -180,4 +180,4 @@ python src/train_model.py
 - Ajouter des données socio-économiques par commune
 - Déployer l'application via Streamlit Cloud
 
-![Model prediction](prediction_plot.png)
+![Model prediction](prediction.png)
