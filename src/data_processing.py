@@ -10,6 +10,7 @@ def clean_data(df):
     df = df[df["Surface reelle bati"].notna()]
     df = df[df["Surface reelle bati"] > 0]
     df = df[df["Valeur fonciere"] > 10000]
+    df = df[df["Valeur fonciere"] < 1500000]
 
     # filtrer Surface et prix au m²
     df["prix_m2"] = df["Valeur fonciere"] / df["Surface reelle bati"]
@@ -27,16 +28,33 @@ def clean_data(df):
     df["mois_mutation"] = df["Date mutation"].dt.month
     df["Code postal"] = df["Code postal"].astype(str).str.replace(r"\.0$", "", regex=True)
     df["Code departement"] = df["Code postal"].str.zfill(5).str[:2]
-    df["Code postal"] = df["Code postal"].astype(str).str.replace(r"\.0$", "", regex=True)
-    df["Code departement"] = df["Code postal"].str.zfill(5).str[:2]
 
     # encodage des colonnes catégorielles
     df = pd.get_dummies(df, columns=["Type local", "Code departement"], drop_first=False)
+    
+    import numpy as np
+
+    df["surface_log"] = np.log1p(df["Surface reelle bati"])
+    df["terrain_log"] = np.log1p(df["Surface terrain"])
+    df["surface_par_piece"] = df["Surface reelle bati"] / df["Nombre pieces principales"].replace(0, 1)
+
+    prix_cp = df.groupby("Code postal")["Valeur fonciere"].mean()
+    df["prix_moyen_cp"] = df["Code postal"].map(prix_cp)
 
     # garder seulement les colonnes utiles pour ML
-    keep_cols = ["Valeur fonciere", "Surface reelle bati", "Nombre pieces principales",
-                 "Surface terrain", "annee_mutation", "mois_mutation"] + \
-                [c for c in df.columns if c.startswith("Type local_") or c.startswith("Code departement_")]
+
+    keep_cols = [
+    "Valeur fonciere",
+    "Surface reelle bati",
+    "Nombre pieces principales",
+    "Surface terrain",
+    "annee_mutation",
+    "mois_mutation",
+    "surface_log",
+    "terrain_log",
+    "surface_par_piece",
+    "prix_moyen_cp"
+    ] + [c for c in df.columns if c.startswith("Type local_") or c.startswith("Code departement_")]
     df = df[keep_cols].copy()
 
     return df
