@@ -56,13 +56,25 @@ Transforme les dates en année et mois.
 
 Encode les variables catégorielles (Type local, Code departement) pour le machine learning.
 
+Création de nouvelles features :
+
+- surface_log : transformation logarithmique de la surface
+- terrain_log : transformation logarithmique du terrain
+- surface_par_piece : surface moyenne par pièce
+- prix_moyen_cp : prix moyen observé dans le même code postal
+
 🏗️ Entraînement du modèle
 
 Exemple avec train_model.py :
 
 python src/train_model.py
 
-Le modèle est un Random Forest Regressor.
+Le modèle est un XGBoost (plus performant que Random Forest qui a été testé en premier) avec :
+
+- n_estimators ≈ 1000
+- learning_rate ≈ 0.02
+- max_depth ≈ 7
+- subsample ≈ 0.8
 
 La target (Valeur fonciere) est log-transformée pour réduire l’impact des valeurs extrêmes.
 
@@ -79,6 +91,16 @@ RMSE (Root Mean Squared Error)
 R²
 
 Ces métriques permettent de mesurer la qualité des prédictions.
+
+## 📈 Résultats du modèle
+
+MAE : 77 097 €
+
+RMSE : 131 824 €
+
+R² : 0.563
+
+Le modèle explique environ **56 % de la variance du prix des biens immobiliers**.
 
 🧮 Faire une prédiction
 
@@ -129,7 +151,7 @@ Cela montre quelles variables influencent le plus le prix (ex. Surface reelle ba
 
 🌐 Interface utilisateur (optionnelle)
 
- Sur le terminal, lancer streamlit run app/streamlit_app.py après avoir installé streamlit
+streamlit run src/app.py
 
 Streamlit : interface web pour saisir les caractéristiques et afficher le prix estimé.
 
@@ -138,13 +160,24 @@ Streamlit : interface web pour saisir les caractéristiques et afficher le prix 
 
 Les données DVF sont très volumineuses, donc l’entraînement peut être long.
 
-Le modèle est plus précis sur les biens standards (prix < 2M €).
+Le modèle est plus précis sur les biens standards (prix < 1,5M €).
 
 Les DOM-TOM sont inclus avec les codes départements > 97.
 
 Les colonnes catégorielles doivent correspondre exactement à celles utilisées à l’entraînement pour éviter les erreurs de prédiction.
 
-Le modèle n'est pas versionné car il est trop volumineux.
-Pour le générer :
+Le modèle entraîné est sauvegardé localement dans models/price_model.pkl.
+
+Ce fichier n'est pas versionné sur GitHub car il est trop volumineux.
+Il peut être recréé en exécutant :
 
 python src/train_model.py
+
+## 🚀 Améliorations possibles
+
+- Ajouter des coordonnées géographiques (latitude / longitude)
+- Utiliser des modèles spatiaux
+- Ajouter des données socio-économiques par commune
+- Déployer l'application via Streamlit Cloud
+
+![Model prediction](prediction_plot.png)
