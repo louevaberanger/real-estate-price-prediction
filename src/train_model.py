@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
+import xgboost
 
 from data_processing import clean_data
 
@@ -34,12 +35,16 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # Créer et entraîner le modèle
-model = RandomForestRegressor(
-    n_estimators=500,
-    max_depth=None,        # profondeur illimitée
-    min_samples_leaf=5,    # éviter overfitting
-    max_features="sqrt",   # réduire corrélation entre arbres
-    n_jobs=-1,
+from xgboost import XGBRegressor
+
+from xgboost import XGBRegressor
+
+model = XGBRegressor(
+    n_estimators=800,
+    learning_rate=0.03,
+    max_depth=6,
+    subsample=0.8,
+    colsample_bytree=0.8,
     random_state=42
 )
 model.fit(X_train, y_train)
