@@ -175,6 +175,7 @@ python src/train_model.py
 
 ## 🚀 Améliorations possibles
 
+- Pour l'instant, le modèle a du mal à prédire les biens qui sont chers (notamment les biens en région parisienne).
 - Ajouter des coordonnées géographiques (latitude / longitude)
 - Utiliser des modèles spatiaux
 - Ajouter des données socio-économiques par commune
