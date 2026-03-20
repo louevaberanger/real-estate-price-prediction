@@ -19,9 +19,6 @@ df = pd.read_csv(
 df = clean_data(df)
 print("Nombre de lignes après nettoyage :", len(df))
 
-# Optionnel : réduire l'échantillon pour tester plus vite
-df = df.sample(200000, random_state=42)
-
 # Transforme la target en log pour stabiliser les valeurs extrêmes
 df["log_valeur_fonciere"] = np.log(df["Valeur fonciere"])
 
