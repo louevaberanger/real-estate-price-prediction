@@ -12,9 +12,6 @@ def clean_data(df):
     df = df[df["Valeur fonciere"] > 10000]
     df = df[df["Valeur fonciere"] < 1500000]
 
-    prix_cp = df.groupby("Code postal")["Valeur fonciere"].mean()
-    df["prix_moyen_cp"] = df["Code postal"].map(prix_cp)
-
     # filtrer Surface et prix au m²
     df["prix_m2"] = df["Valeur fonciere"] / df["Surface reelle bati"]
     df = df[df["prix_m2"] < 20000]
@@ -40,6 +37,9 @@ def clean_data(df):
     df["surface_log"] = np.log1p(df["Surface reelle bati"])
     df["terrain_log"] = np.log1p(df["Surface terrain"])
     df["surface_par_piece"] = df["Surface reelle bati"] / df["Nombre pieces principales"].replace(0, 1)
+
+    prix_cp = df.groupby("Code postal")["Valeur fonciere"].mean()
+    df["prix_moyen_cp"] = df["Code postal"].map(prix_cp)
 
     # garder seulement les colonnes utiles pour ML
 
