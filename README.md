@@ -151,7 +151,7 @@ Cela montre quelles variables influencent le plus le prix (ex. Surface reelle ba
 
 🌐 Interface utilisateur (optionnelle)
 
-streamlit run app/streamlit_app.py
+streamlit run src/streamlit_app.py
 
 Streamlit : interface web pour saisir les caractéristiques et afficher le prix estimé.
 
